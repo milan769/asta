@@ -1,0 +1,76 @@
+-----------------------------------------------------------------------------------
+index.html
+-----------------------------------------------------------------------------------
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <title>Asta</title>
+  </head>
+  <body>
+    <p id="text">Hello World!</p>
+    <button onclick="changeText()">Change Text</button>
+  </body>
+
+  <script src="script.js"></script>
+</html>
+
+
+----------------------------------------------------------------------------------------
+script.js
+----------------------------------------------------------------------------------------
+function changeText() {
+  const element = document.getElementById("text");
+
+  element.innerHTML == "Hello World!"
+    ? fetchData().then((daten) => (element.innerHTML = `${daten}!`))
+    : (element.innerHTML = "Hello World!");
+}
+//const decoder = new TextDecoder();
+async function fetchData() {
+  let response = await fetch("http://127.0.0.1:8000", {
+    method: "GET",
+  });
+  const data = new TextDecoder().decode(
+    (await response.body.getReader().read()).value
+  );
+  console.log(data);
+  return data;
+}
+
+
+----------------------------------------------------------------------------------------------
+server.js
+------------------------------------------------------------------------------------------------
+import { listenAndServe } from "https://deno.land/std@0.113.0/http/server.ts";
+
+listenAndServe(
+  ":8000",
+  () =>
+    new Response("Hallo Asta", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+);
+
+console.log("http://localhost:8000/");
+
+
+---------------------------------------------------------------------------------------------------
+style.css
+---------------------------------------------------------------------------------------------------
+html,
+body {
+  border: 3px solid black;
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-direction: column;
+}
+
